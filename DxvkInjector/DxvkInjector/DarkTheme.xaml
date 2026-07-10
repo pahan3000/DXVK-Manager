@@ -1,0 +1,245 @@
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <!-- Self-contained dark palette. Deliberately not relying on Playnite theme keys
+         (they vary by installed skin) — this guarantees a dark UI no matter what
+         theme the user has Playnite set to. -->
+    <SolidColorBrush x:Key="DxvkBg"          Color="#FF1E1E1E"/>
+    <SolidColorBrush x:Key="DxvkPanelBg"     Color="#FF262626"/>
+    <SolidColorBrush x:Key="DxvkBorder"      Color="#FF3A3A3A"/>
+    <SolidColorBrush x:Key="DxvkText"        Color="#FFE6E6E6"/>
+    <SolidColorBrush x:Key="DxvkTextMuted"   Color="#FFA0A0A0"/>
+    <SolidColorBrush x:Key="DxvkAccent"      Color="#FF3E8EDE"/>
+    <SolidColorBrush x:Key="DxvkAccentHover" Color="#FF5AA2EA"/>
+    <SolidColorBrush x:Key="DxvkAccentPress" Color="#FF2E6FB0"/>
+    <SolidColorBrush x:Key="DxvkDanger"      Color="#FFD9534F"/>
+    <SolidColorBrush x:Key="DxvkControlBg"   Color="#FF303030"/>
+    <SolidColorBrush x:Key="DxvkDisabled"    Color="#FF555555"/>
+
+    <!-- Window chrome -->
+    <Style TargetType="Window">
+        <Setter Property="Background" Value="{StaticResource DxvkBg}"/>
+        <Setter Property="Foreground" Value="{StaticResource DxvkText}"/>
+        <Setter Property="FontSize" Value="13"/>
+    </Style>
+
+    <Style TargetType="UserControl">
+        <Setter Property="Background" Value="{StaticResource DxvkBg}"/>
+        <Setter Property="TextElement.Foreground" Value="{StaticResource DxvkText}"/>
+    </Style>
+
+    <Style TargetType="TextBlock">
+        <Setter Property="Foreground" Value="{StaticResource DxvkText}"/>
+    </Style>
+
+    <Style x:Key="DxvkMutedText" TargetType="TextBlock" BasedOn="{StaticResource {x:Type TextBlock}}">
+        <Setter Property="Foreground" Value="{StaticResource DxvkTextMuted}"/>
+        <Setter Property="FontSize" Value="11.5"/>
+    </Style>
+
+    <Style x:Key="DxvkSectionHeader" TargetType="TextBlock" BasedOn="{StaticResource {x:Type TextBlock}}">
+        <Setter Property="FontWeight" Value="SemiBold"/>
+        <Setter Property="FontSize" Value="13.5"/>
+        <Setter Property="Margin" Value="0,14,0,6"/>
+    </Style>
+
+    <!-- Bordered panel (replaces GroupBox, which is a pain to re-skin cleanly) -->
+    <Style x:Key="DxvkPanel" TargetType="Border">
+        <Setter Property="Background" Value="{StaticResource DxvkPanelBg}"/>
+        <Setter Property="BorderBrush" Value="{StaticResource DxvkBorder}"/>
+        <Setter Property="BorderThickness" Value="1"/>
+        <Setter Property="CornerRadius" Value="4"/>
+        <Setter Property="Padding" Value="12"/>
+    </Style>
+
+    <!-- Button -->
+    <Style TargetType="Button">
+        <Setter Property="Background" Value="{StaticResource DxvkControlBg}"/>
+        <Setter Property="Foreground" Value="{StaticResource DxvkText}"/>
+        <Setter Property="BorderBrush" Value="{StaticResource DxvkBorder}"/>
+        <Setter Property="BorderThickness" Value="1"/>
+        <Setter Property="Padding" Value="10,6"/>
+        <Setter Property="Cursor" Value="Hand"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="Button">
+                    <Border x:Name="border"
+                            Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            CornerRadius="3">
+                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"
+                                          Margin="{TemplateBinding Padding}"/>
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter TargetName="border" Property="BorderBrush" Value="{StaticResource DxvkAccent}"/>
+                        </Trigger>
+                        <Trigger Property="IsPressed" Value="True">
+                            <Setter TargetName="border" Property="Background" Value="{StaticResource DxvkAccentPress}"/>
+                        </Trigger>
+                        <Trigger Property="IsEnabled" Value="False">
+                            <Setter TargetName="border" Property="Background" Value="{StaticResource DxvkBg}"/>
+                            <Setter Property="Foreground" Value="{StaticResource DxvkDisabled}"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!-- Primary (accent) button -->
+    <Style x:Key="DxvkPrimaryButton" TargetType="Button" BasedOn="{StaticResource {x:Type Button}}">
+        <Setter Property="Background" Value="{StaticResource DxvkAccent}"/>
+        <Setter Property="BorderBrush" Value="{StaticResource DxvkAccent}"/>
+        <Setter Property="Foreground" Value="White"/>
+        <Setter Property="FontWeight" Value="SemiBold"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="Button">
+                    <Border x:Name="border" Background="{TemplateBinding Background}" CornerRadius="3">
+                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"
+                                          Margin="{TemplateBinding Padding}"/>
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter TargetName="border" Property="Background" Value="{StaticResource DxvkAccentHover}"/>
+                        </Trigger>
+                        <Trigger Property="IsPressed" Value="True">
+                            <Setter TargetName="border" Property="Background" Value="{StaticResource DxvkAccentPress}"/>
+                        </Trigger>
+                        <Trigger Property="IsEnabled" Value="False">
+                            <Setter TargetName="border" Property="Background" Value="{StaticResource DxvkDisabled}"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!-- Danger button (Remove) -->
+    <Style x:Key="DxvkDangerButton" TargetType="Button" BasedOn="{StaticResource {x:Type Button}}">
+        <Setter Property="BorderBrush" Value="{StaticResource DxvkDanger}"/>
+        <Setter Property="Foreground" Value="{StaticResource DxvkDanger}"/>
+    </Style>
+
+    <!-- Regular checkbox (module toggles) -->
+    <Style TargetType="CheckBox">
+        <Setter Property="Foreground" Value="{StaticResource DxvkText}"/>
+        <Setter Property="Cursor" Value="Hand"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="CheckBox">
+                    <StackPanel Orientation="Horizontal">
+                        <Border x:Name="box" Width="16" Height="16" CornerRadius="3"
+                                Background="{StaticResource DxvkControlBg}"
+                                BorderBrush="{StaticResource DxvkBorder}" BorderThickness="1"
+                                VerticalAlignment="Center">
+                            <Path x:Name="check" Data="M2,7 L6,11 L14,2" Stroke="White" StrokeThickness="2"
+                                  StrokeStartLineCap="Round" StrokeEndLineCap="Round" StrokeLineJoin="Round"
+                                  Visibility="Collapsed"/>
+                        </Border>
+                        <ContentPresenter Margin="8,0,0,0" VerticalAlignment="Center"/>
+                    </StackPanel>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsChecked" Value="True">
+                            <Setter TargetName="box" Property="Background" Value="{StaticResource DxvkAccent}"/>
+                            <Setter TargetName="box" Property="BorderBrush" Value="{StaticResource DxvkAccent}"/>
+                            <Setter TargetName="check" Property="Visibility" Value="Visible"/>
+                        </Trigger>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter TargetName="box" Property="BorderBrush" Value="{StaticResource DxvkAccent}"/>
+                        </Trigger>
+                        <Trigger Property="IsEnabled" Value="False">
+                            <Setter Property="Foreground" Value="{StaticResource DxvkDisabled}"/>
+                            <Setter TargetName="box" Property="BorderBrush" Value="{StaticResource DxvkDisabled}"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!-- Toggle-switch styled checkbox, used for the "big" on/off settings -->
+    <Style x:Key="DxvkToggleSwitch" TargetType="CheckBox">
+        <Setter Property="Cursor" Value="Hand"/>
+        <Setter Property="Foreground" Value="{StaticResource DxvkText}"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="CheckBox">
+                    <DockPanel LastChildFill="True">
+                        <Border x:Name="track" DockPanel.Dock="Left" Width="38" Height="20" CornerRadius="10"
+                                Background="{StaticResource DxvkControlBg}"
+                                BorderBrush="{StaticResource DxvkBorder}" BorderThickness="1"
+                                VerticalAlignment="Center">
+                            <Border x:Name="knob" Width="14" Height="14" CornerRadius="7" Background="{StaticResource DxvkTextMuted}"
+                                    HorizontalAlignment="Left" Margin="2,0,0,0"/>
+                        </Border>
+                        <ContentPresenter Margin="10,0,0,0" VerticalAlignment="Center"/>
+                    </DockPanel>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsChecked" Value="True">
+                            <Setter TargetName="track" Property="Background" Value="{StaticResource DxvkAccent}"/>
+                            <Setter TargetName="track" Property="BorderBrush" Value="{StaticResource DxvkAccent}"/>
+                            <Setter TargetName="knob" Property="HorizontalAlignment" Value="Right"/>
+                            <Setter TargetName="knob" Property="Margin" Value="0,0,2,0"/>
+                            <Setter TargetName="knob" Property="Background" Value="White"/>
+                        </Trigger>
+                        <Trigger Property="IsEnabled" Value="False">
+                            <Setter Property="Foreground" Value="{StaticResource DxvkDisabled}"/>
+                            <Setter TargetName="track" Property="Opacity" Value="0.6"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!-- Read-only path textbox -->
+    <Style TargetType="TextBox">
+        <Setter Property="Background" Value="{StaticResource DxvkControlBg}"/>
+        <Setter Property="Foreground" Value="{StaticResource DxvkText}"/>
+        <Setter Property="BorderBrush" Value="{StaticResource DxvkBorder}"/>
+        <Setter Property="BorderThickness" Value="1"/>
+        <Setter Property="Padding" Value="6,5"/>
+        <Setter Property="CaretBrush" Value="{StaticResource DxvkText}"/>
+        <Setter Property="SelectionBrush" Value="{StaticResource DxvkAccent}"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="TextBox">
+                    <Border Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            CornerRadius="3">
+                        <ScrollViewer x:Name="PART_ContentHost" Margin="{TemplateBinding Padding}"/>
+                    </Border>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!-- Progress bar -->
+    <Style TargetType="ProgressBar">
+        <Setter Property="Background" Value="{StaticResource DxvkControlBg}"/>
+        <Setter Property="Foreground" Value="{StaticResource DxvkAccent}"/>
+        <Setter Property="BorderThickness" Value="0"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="ProgressBar">
+                    <Grid>
+                        <Border CornerRadius="2" Background="{TemplateBinding Background}"/>
+                        <Border x:Name="PART_Track" CornerRadius="2" Background="{TemplateBinding Background}"/>
+                        <Border x:Name="PART_Indicator" CornerRadius="2" Background="{TemplateBinding Foreground}"
+                                HorizontalAlignment="Left"/>
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="DxvkStatusText" TargetType="TextBlock" BasedOn="{StaticResource {x:Type TextBlock}}">
+        <Setter Property="TextWrapping" Value="Wrap"/>
+        <Setter Property="Foreground" Value="{StaticResource DxvkTextMuted}"/>
+    </Style>
+
+</ResourceDictionary>

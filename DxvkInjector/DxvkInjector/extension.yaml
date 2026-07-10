@@ -1,0 +1,6 @@
+Id: 629fcf75-e4c2-47cc-9280-cf339024cd46
+Name: DXVK Manager
+Author: pahan3000
+Version: 1.0.0
+Module: DxvkInjector.dll
+Type: GenericPlugin

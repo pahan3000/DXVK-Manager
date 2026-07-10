@@ -1,0 +1,11 @@
+{
+  "version": 2,
+  "dgSpecHash": "Zbc+oLIN1ts=",
+  "success": true,
+  "projectFilePath": "C:\\playnite_extensions\\DxvkInjector\\DxvkInjector\\DxvkInjector.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\Pahan\\.nuget\\packages\\newtonsoft.json\\13.0.4\\newtonsoft.json.13.0.4.nupkg.sha512",
+    "C:\\Users\\Pahan\\.nuget\\packages\\playnitesdk\\6.16.0\\playnitesdk.6.16.0.nupkg.sha512"
+  ],
+  "logs": []
+}

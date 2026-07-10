@@ -1,0 +1,76 @@
+<UserControl x:Class="DxvkInjector.DxvkInjectorSettingsView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d"
+             d:DesignWidth="560">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="DarkTheme.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </UserControl.Resources>
+
+    <ScrollViewer VerticalScrollBarVisibility="Auto">
+        <StackPanel Margin="4,4,16,12" MaxWidth="620" HorizontalAlignment="Left">
+
+            <!-- DXVK folder -->
+            <Border Style="{StaticResource DxvkPanel}">
+                <StackPanel>
+                    <TextBlock Text="DXVK build" FontWeight="SemiBold" FontSize="14"/>
+                    <TextBlock Style="{StaticResource DxvkMutedText}" Margin="0,4,0,10" TextWrapping="Wrap"
+                               Text="Extract a DXVK (or dxvk-gplasync) release yourself and point this at the extracted folder — the one containing x32 and/or x64. Nothing is downloaded automatically."/>
+
+                    <DockPanel>
+                        <Button Content="Browse..." DockPanel.Dock="Right" Width="100"
+                                Command="{Binding BrowseFolderCommand}"/>
+                        <TextBox Text="{Binding Settings.DxvkFolderPath, Mode=OneWay}" IsReadOnly="True" Margin="0,0,8,0"/>
+                    </DockPanel>
+
+                    <TextBlock Text="{Binding FolderStatusText}" Style="{StaticResource DxvkStatusText}" Margin="0,8,0,0"/>
+                </StackPanel>
+            </Border>
+
+            <!-- Default modules -->
+            <Border Style="{StaticResource DxvkPanel}" Margin="0,12,0,0">
+                <StackPanel>
+                    <TextBlock Text="Default modules" FontWeight="SemiBold" FontSize="14"/>
+                    <TextBlock Style="{StaticResource DxvkMutedText}" Margin="0,4,0,10" TextWrapping="Wrap"
+                               Text="Used as the starting point for new injects (manual or automatic). Auto-inject additionally only ever injects the module(s) that match the DirectX version it actually detects."/>
+                    <WrapPanel>
+                        <CheckBox Content="d3d9"      IsChecked="{Binding Settings.InjectD3D9}"      Margin="0,0,20,0"/>
+                        <CheckBox Content="d3d10core" IsChecked="{Binding Settings.InjectD3D10Core}" Margin="0,0,20,0"/>
+                        <CheckBox Content="d3d11"     IsChecked="{Binding Settings.InjectD3D11}"     Margin="0,0,20,0"/>
+                        <CheckBox Content="dxgi"      IsChecked="{Binding Settings.InjectDxgi}"/>
+                    </WrapPanel>
+                </StackPanel>
+            </Border>
+
+            <!-- Automatic injection -->
+            <Border Style="{StaticResource DxvkPanel}" Margin="0,12,0,0">
+                <StackPanel>
+                    <TextBlock Text="Automatic injection" FontWeight="SemiBold" FontSize="14"/>
+                    <TextBlock Style="{StaticResource DxvkMutedText}" Margin="0,4,0,12" TextWrapping="Wrap"
+                               Text="When on, DXVK Injector reads each game's executable to detect the Direct3D version it uses. DX9, DX10 and DX11 titles get DXVK injected automatically; DX12 and anything unrecognized is left untouched. Games that already have DXVK enabled aren't touched again."/>
+
+                    <CheckBox Content="Automatically inject DXVK for DX9–DX11 games"
+                              Style="{StaticResource DxvkToggleSwitch}"
+                              IsChecked="{Binding Settings.AutoInjectEnabled}"
+                              Margin="0,0,0,12"/>
+
+                    <StackPanel Margin="26,0,0,0" IsEnabled="{Binding Settings.AutoInjectEnabled}">
+                        <CheckBox Content="When a game is added to the library (and is already installed)"
+                                  IsChecked="{Binding Settings.AutoInjectOnAdded}" Margin="0,0,0,8"/>
+                        <CheckBox Content="Right after a game finishes installing"
+                                  IsChecked="{Binding Settings.AutoInjectOnInstalled}" Margin="0,0,0,8"/>
+                        <CheckBox Content="Show a notification when DXVK is auto-injected"
+                                  IsChecked="{Binding Settings.ShowNotifications}"/>
+                    </StackPanel>
+                </StackPanel>
+            </Border>
+
+        </StackPanel>
+    </ScrollViewer>
+</UserControl>

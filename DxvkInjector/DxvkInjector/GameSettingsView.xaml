@@ -1,0 +1,169 @@
+<UserControl x:Class="DxvkInjector.GameSettingsView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:local="clr-namespace:DxvkInjector"
+             mc:Ignorable="d"
+             Background="{DynamicResource WindowBackgroundBrush}"
+             TextElement.Foreground="{DynamicResource TextBrush}"
+             d:DesignHeight="600" d:DesignWidth="460">
+
+    <UserControl.Resources>
+
+        <local:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter"/>
+
+        <!-- On/off track color, swapped by the IsChecked trigger below. -->
+        <SolidColorBrush x:Key="SwitchTrackOffBrush" Color="#4D4D52"/>
+        <SolidColorBrush x:Key="SwitchTrackOnBrush" Color="#4A90D9"/>
+        <SolidColorBrush x:Key="SwitchThumbBrush" Color="#F2F2F2"/>
+
+        <Style x:Key="ToggleSwitchStyle" TargetType="ToggleButton">
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Focusable" Value="True"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="ToggleButton">
+                        <Grid Width="40" Height="20" Background="Transparent">
+                            <Border x:Name="Track"
+                                    CornerRadius="10"
+                                    Background="{StaticResource SwitchTrackOffBrush}"/>
+                            <Ellipse x:Name="Thumb"
+                                     Width="16" Height="16"
+                                     Fill="{StaticResource SwitchThumbBrush}"
+                                     HorizontalAlignment="Left"
+                                     Margin="2,0,0,0"/>
+                        </Grid>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsChecked" Value="True">
+                                <Setter TargetName="Track" Property="Background" Value="{StaticResource SwitchTrackOnBrush}"/>
+                                <Setter TargetName="Thumb" Property="HorizontalAlignment" Value="Right"/>
+                                <Setter TargetName="Thumb" Property="Margin" Value="0,0,2,0"/>
+                            </Trigger>
+                            <Trigger Property="IsEnabled" Value="False">
+                                <Setter Property="Opacity" Value="0.5"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- Label/state text stretches, switch pins to the right. -->
+        <Style x:Key="SwitchRowStyle" TargetType="Grid">
+            <Setter Property="Margin" Value="0,8,0,0"/>
+        </Style>
+
+        <!-- Subtle low-contrast panel background that reads on both light and dark
+             Playnite skins without depending on a specific theme's brush keys. -->
+        <SolidColorBrush x:Key="PanelBrush" Color="#14808080"/>
+
+    </UserControl.Resources>
+
+    <StackPanel Margin="20" MinWidth="380">
+
+        <TextBlock Text="{Binding SelectedGame.Name}" FontWeight="Bold" FontSize="16" Margin="0,0,0,16"/>
+
+        <!-- DXVK build -->
+        <TextBlock Text="DXVK build" FontWeight="Bold" Margin="0,0,0,4"/>
+        <TextBlock Text="Which folder DXVK's dlls are copied from — set globally in DXVK Injector's settings (F9)."
+                   FontStyle="Italic" Foreground="{DynamicResource TextBrushDarker}" TextWrapping="Wrap" Margin="0,0,0,6"/>
+        <DockPanel Margin="0,0,0,16">
+            <Button Content="Open settings" DockPanel.Dock="Right" Width="110" Padding="8,4"
+                    Command="{Binding OpenGlobalSettingsCommand}"/>
+            <TextBox Text="{Binding DxvkFolderPath, Mode=OneWay}" IsReadOnly="True" Margin="0,0,8,0" VerticalContentAlignment="Center"/>
+        </DockPanel>
+
+        <!-- Detection -->
+        <TextBlock Text="Detected game" FontWeight="Bold" Margin="0,0,0,4"/>
+        <TextBlock Text="Read from the game's exe — click Detect to refresh, or Browse... if the wrong exe was picked."
+                   FontStyle="Italic" Foreground="{DynamicResource TextBrushDarker}" TextWrapping="Wrap" Margin="0,0,0,6"/>
+        <Border Background="{StaticResource PanelBrush}" CornerRadius="4" Padding="12" Margin="0,0,0,16">
+            <StackPanel>
+                <DockPanel Margin="0,0,0,4">
+                    <TextBlock Text="Direct3D API:" FontWeight="SemiBold" Width="120"/>
+                    <TextBlock Text="{Binding DetectedApiText}" TextWrapping="Wrap"/>
+                </DockPanel>
+                <DockPanel Margin="0,0,0,8">
+                    <TextBlock Text="Architecture:" FontWeight="SemiBold" Width="120"/>
+                    <TextBlock Text="{Binding DetectedArchitectureText}" TextWrapping="Wrap"/>
+                </DockPanel>
+                <Button Content="Browse for exe..." Command="{Binding BrowseExeCommand}"
+                        HorizontalAlignment="Left" Padding="8,4"/>
+            </StackPanel>
+        </Border>
+
+        <!-- Modules -->
+        <TextBlock Text="Modules to inject" FontWeight="Bold" Margin="0,0,0,4"/>
+        <TextBlock Text="Toggled automatically to match the detected API the first time this game is opened — flip any of them by hand afterwards."
+                   FontStyle="Italic" Foreground="{DynamicResource TextBrushDarker}" TextWrapping="Wrap" Margin="0,0,0,6"/>
+
+        <Grid Style="{StaticResource SwitchRowStyle}" Margin="0,0,0,0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+            <StackPanel Grid.Column="0">
+                <TextBlock Text="d3d9" FontWeight="SemiBold"/>
+                <TextBlock Text="Direct3D 9 replacement (d3d9.dll)." FontStyle="Italic" Foreground="{DynamicResource TextBrushDarker}"/>
+            </StackPanel>
+            <ToggleButton Grid.Column="1" Style="{StaticResource ToggleSwitchStyle}" VerticalAlignment="Center"
+                          IsChecked="{Binding DxvkD3D9Enabled}"/>
+        </Grid>
+
+        <Grid Style="{StaticResource SwitchRowStyle}">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+            <StackPanel Grid.Column="0">
+                <TextBlock Text="d3d10core" FontWeight="SemiBold"/>
+                <TextBlock Text="Direct3D 10 / 10.1 core replacement (d3d10core.dll)." FontStyle="Italic" Foreground="{DynamicResource TextBrushDarker}"/>
+            </StackPanel>
+            <ToggleButton Grid.Column="1" Style="{StaticResource ToggleSwitchStyle}" VerticalAlignment="Center"
+                          IsChecked="{Binding DxvkD3D10CoreEnabled}"/>
+        </Grid>
+
+        <Grid Style="{StaticResource SwitchRowStyle}">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+            <StackPanel Grid.Column="0">
+                <TextBlock Text="d3d11" FontWeight="SemiBold"/>
+                <TextBlock Text="Direct3D 11 replacement (d3d11.dll)." FontStyle="Italic" Foreground="{DynamicResource TextBrushDarker}"/>
+            </StackPanel>
+            <ToggleButton Grid.Column="1" Style="{StaticResource ToggleSwitchStyle}" VerticalAlignment="Center"
+                          IsChecked="{Binding DxvkD3D11Enabled}"/>
+        </Grid>
+
+        <Grid Style="{StaticResource SwitchRowStyle}" Margin="0,8,0,16">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+            <StackPanel Grid.Column="0">
+                <TextBlock Text="dxgi" FontWeight="SemiBold"/>
+                <TextBlock Text="DXGI swapchain replacement (dxgi.dll)."
+                           FontStyle="Italic" Foreground="{DynamicResource TextBrushDarker}" TextWrapping="Wrap"/>
+            </StackPanel>
+            <ToggleButton Grid.Column="1" Style="{StaticResource ToggleSwitchStyle}" VerticalAlignment="Center"
+                          IsChecked="{Binding DxvkDxgiEnabled}"/>
+        </Grid>
+
+        <TextBlock Text="{Binding StatusText}" TextWrapping="Wrap" Margin="0,0,0,0"/>
+        <ProgressBar IsIndeterminate="True" Height="4" Margin="0,6,0,0"
+                     Visibility="{Binding Busy, Converter={StaticResource BoolToVisibilityConverter}}"/>
+
+        <!-- Actions -->
+        <TextBlock Text="Actions" FontWeight="Bold" Margin="0,16,0,8"/>
+        <StackPanel Orientation="Horizontal" Margin="0,0,0,20">
+            <Button Content="Detect" Command="{Binding DetectCommand}" Margin="0,0,8,0" Padding="8,4"/>
+            <Button Content="Inject" Command="{Binding InjectCommand}" Margin="0,0,8,0" Padding="8,4"/>
+            <Button Content="Remove" Command="{Binding RemoveCommand}" Padding="8,4"/>
+        </StackPanel>
+
+        <Button Content="Close" Command="{Binding CloseCommand}" HorizontalAlignment="Right" Padding="16,4"/>
+
+    </StackPanel>
+</UserControl>

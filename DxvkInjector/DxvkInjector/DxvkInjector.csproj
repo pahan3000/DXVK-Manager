@@ -1,0 +1,116 @@
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{A079B3A1-DFF9-4C98-A5A7-13267F6D0C39}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <RootNamespace>DxvkInjector</RootNamespace>
+    <AssemblyName>DxvkInjector</AssemblyName>
+    <TargetFrameworkVersion>v4.6.2</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <Deterministic>true</Deterministic>
+    <LangVersion>7.3</LangVersion>
+    <!-- Playnite plugins are built against .NET Framework 4.6.2, no System.ValueTuple -->
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+    <!-- WPF, for ICommand / MessageBox / windows / the settings UserControl -->
+    <Reference Include="WindowsBase" />
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
+    <Reference Include="System.Xaml" />
+  </ItemGroup>
+  <ItemGroup>
+    <!-- NuGet-restored on build: right-click the solution -> Restore NuGet Packages
+         if your IDE doesn't do this automatically.
+
+         Newtonsoft.Json.dll MUST be deployed next to DxvkInjector.dll. This project calls
+         JsonConvert directly (DxvkGameConfigStore), so the JIT needs to resolve the
+         Newtonsoft.Json assembly the moment Detect/Save runs. A previous version of this
+         project set ExcludeAssets="runtime" here on the theory that Playnite always has a
+         compatible copy already loaded — that assumption doesn't hold reliably (plugin
+         assemblies are loaded via LoadFrom, and probing doesn't transparently fall back to
+         whatever the host or another plugin happened to load first), and it's exactly what
+         produced "Could not load file or assembly 'Newtonsoft.Json...'" on Detect. Shipping
+         our own copy is safe: NuGet Newtonsoft.Json 13.0.x all share AssemblyVersion
+         13.0.0.0, so whichever copy (Playnite's, ours, or another plugin's) loads into the
+         AppDomain first satisfies every other 13.0.x reference without needing a redirect. -->
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.4" />
+    <PackageReference Include="PlayniteSDK" Version="6.16.0" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ObservableObject.cs" />
+    <Compile Include="RelayCommand.cs" />
+    <Compile Include="BoolToVisibilityConverter.cs" />
+    <Compile Include="InverseBoolToVisibilityConverter.cs" />
+    <Compile Include="DxvkModels.cs" />
+    <Compile Include="DxvkScanModels.cs" />
+    <Compile Include="DxvkLocalSource.cs" />
+    <Compile Include="DxvkInjectionService.cs" />
+    <Compile Include="DxvkGameConfigStore.cs" />
+    <Compile Include="DxvkInjectorSettings.cs" />
+    <Compile Include="DxvkInjectorSettingsViewModel.cs" />
+    <Compile Include="GameSettingsViewModel.cs" />
+    <Compile Include="DxvkScanViewModel.cs" />
+    <Compile Include="DxvkInjectorPlugin.cs" />
+    <Compile Include="GameSettingsView.xaml.cs">
+      <DependentUpon>GameSettingsView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="DxvkScanWindow.xaml.cs">
+      <DependentUpon>DxvkScanWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="DxvkInjectorSettingsView.xaml.cs">
+      <DependentUpon>DxvkInjectorSettingsView.xaml</DependentUpon>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Include="DarkTheme.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="GameSettingsView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="DxvkScanWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="DxvkInjectorSettingsView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <!-- Must physically exist next to the built DLL for Toolbox.exe pack to find it -->
+    <None Include="extension.yaml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>
