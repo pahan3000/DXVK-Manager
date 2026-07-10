@@ -9,7 +9,7 @@ go to [releases](https://github.com/pahan3000/DXVK-Manager/releases) for the lat
 ## Requirements
 
 - Playnite
-- Extracted dxvk (needs `x32/` and/or `x64/` subfolders)
+- Extracted dxvk
 
 ## Building
 
