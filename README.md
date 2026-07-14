@@ -3,7 +3,6 @@ A playnite extension that simplifies the dxvk injection process.
 ## Features
 
 - **One-click inject/remove** — manage DXVK for any game from the topbar icon button or right-click menu.
-- **Auto-inject** — optionally inject DXVK automatically into DX9–DX11 games when they're added to your library or finish installing, no manual step needed.
 
 go to [releases](https://github.com/pahan3000/DXVK-Manager/releases) for the latest version
 ## Requirements
